@@ -78,17 +78,22 @@ so a single line appears to grow through the whole net from left to right.
 
 | Step | Duration | Stagger | What moves |
 |---|---|---|---|
-| Star opens | 0.38s | one column every 0.22s | Two half-outlines draw from the left tip and meet at the right |
-| Cross follows | 0.26s | +0.27s after its column's star | The gap shape, wound to start at its own left point |
-| Phones land | 0.95s | centre 2.50s, left 2.66s, right 2.80s | Centre rises; the outer two fan out from behind it |
-| Light sweep | 1.60s | once, 4.20s | A single sheen across the phones, clipped to their silhouettes |
-| Phone float | 7s | loop, alternate | ±9px, starts once they have landed |
-| Ambient drift | 72s | loop | −104px diagonal — exactly one cell, so the loop never shows a seam |
+| Star opens | 0.62s | one column every 0.34s | Two half-outlines draw from the left tip and meet at the right |
+| Cross follows | 0.42s | +0.45s after its column's star | The gap shape, wound to start at its own left point |
+| Phones land | 0.95s | centre 1.50s, left 1.66s, right 1.80s | Centre rises; the outer two fan out from behind it |
+| Light sweep | 1.80s | once, 3.40s | A single sheen across the phones, clipped to their silhouettes |
+| Phone float | 9s | loop, alternate | ±9px, starts once they have landed |
+| Ambient drift | 120s | loop | −104px diagonal — exactly one cell, so the loop never shows a seam |
 | Pointer parallax | — | rAF, lerp .06 | ±22px counter to the cursor |
 
 `stroke-dashoffset` is not GPU-composited, so every drawing path repaints each
 frame. Because a column only starts as the previous one finishes, peak load is
-about **50** concurrent draws out of 780 paths — that is what keeps it smooth.
+about **78** concurrent draws out of 780 paths — that is what keeps it smooth.
+
+The lattice takes about **7.4s** end to end in option A, deliberately slow. The
+phones do not wait for it: they land at 1.5s so the product is there immediately
+while the texture keeps unfolding behind them. Options B and C still use the
+faster 4.6s sweep — say the word and I will match them.
 
 ## Accessibility and cost
 
