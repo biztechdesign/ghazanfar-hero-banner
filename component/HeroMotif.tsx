@@ -143,7 +143,7 @@ export default function HeroMotif({
       for (let r = -1; r < rows; r++) {
         for (let c = -1; c < cols; c++) {
           const x = c * S, y = r * S;
-          const t0 = 0.05 + ((c + r + 2) / maxd) * 1.45;
+          const t0 = 0.05 + ((c + r + 2) / maxd) * 2.6;
 
           const tile = el("g", { class: "gb-tile" }) as SVGGElement;
           tile.style.animationDelay = `${t0}s`;
@@ -169,7 +169,7 @@ export default function HeroMotif({
             pathLength: 1,
             class: "gb-ink",
           }) as SVGPathElement;
-          cr.style.animationDelay = `${t0 + 0.1}s`;
+          cr.style.animationDelay = `${t0 + 0.12}s`;
           tile.appendChild(cr);
 
           g.appendChild(tile);
@@ -190,8 +190,8 @@ export default function HeroMotif({
         });
         mg.appendChild(el("path", { d: MARK, fill: "rgba(255,255,255,.40)" }));
         const ink = el("path", {
-          d: MARK, fill: "none", stroke: "rgba(255,255,255,.55)",
-          "stroke-width": 0.8, pathLength: 1, class: "gb-ink",
+          d: MARK, fill: "none", stroke: "rgba(0,68,148,.55)",
+          "stroke-width": 0.9, pathLength: 1, class: "gb-ink gb-ink-mark",
         }) as SVGPathElement;
         ink.style.animationDelay = "1.1s";
         mg.appendChild(ink);
@@ -288,12 +288,19 @@ export default function HeroMotif({
         }
         .gb-tile {
           opacity: 0;
-          animation: gb-fade-in 1.1s cubic-bezier(0.16, 0.9, 0.3, 1) forwards;
+          animation: gb-fade-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+          will-change: opacity;
         }
         .gb-ink {
           stroke-dasharray: 1;
           stroke-dashoffset: 1;
-          animation: gb-draw 1.5s cubic-bezier(0.35, 0, 0.2, 1) forwards;
+          animation: gb-draw 1.05s cubic-bezier(0.25, 0.6, 0.3, 1) forwards;
+          will-change: stroke-dashoffset;
+        }
+        /* the mark is one long compound path - slower, near-constant pen speed */
+        .gb-ink-mark {
+          animation-duration: 2.6s;
+          animation-timing-function: cubic-bezier(0.2, 0.55, 0.3, 1);
         }
         .gb-drift {
           animation: gb-drift 72s linear infinite;

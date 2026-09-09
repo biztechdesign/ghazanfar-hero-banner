@@ -73,15 +73,19 @@ and delete the `<style jsx global>` wrapper — nothing else changes.
 
 | Step | Duration | Stagger | What moves |
 |---|---|---|---|
-| Tiles appear | 1.10s | wave, 1.45s total | Opacity per tile, ordered by `col + row` — a diagonal sweep from the top-left |
-| Outlines draw | 1.50s | same wave | `stroke-dashoffset` 1 → 0 on `pathLength="1"`, so every star takes the same time |
-| Crosses follow | 1.50s | wave, +100ms | The gap shapes trail their four surrounding stars |
-| Mark draws | 2.40s | once, +1.10s | Option B — fill fades under a drawing outline |
+| Tiles appear | 1.20s | wave, 2.6s total | Opacity per tile, ordered by `col + row` — a diagonal sweep from the top-left |
+| Outlines draw | 1.05s | same wave | `stroke-dashoffset` 1 → 0 on `pathLength="1"`, so every star takes the same time |
+| Crosses follow | 1.05s | wave, +120ms | The gap shapes trail their four surrounding stars |
+| Mark draws | 2.60s | once, +1.10s | Option B — one long compound path, so it gets a slower near-constant pen speed |
 | Rosette blooms | 1.50s | 90ms × 8 | Option C — each petal scales from 0.62 and unwinds −14° |
 | Ambient drift | 72s | loop | −164px diagonal — exactly one cell, so the loop never shows a seam |
 | Pointer parallax | — | rAF, lerp .06 | ±22px counter to the cursor |
 
 The intro plays once. The drift never stops but moves about 2px per second.
+
+`stroke-dashoffset` is not GPU-composited — every drawing path repaints each frame.
+The wave is deliberately spread wider than each draw lasts, so peak load is **168**
+concurrent draws rather than all 281 at once.
 
 ## Accessibility and cost
 
@@ -97,9 +101,9 @@ The intro plays once. The drift never stops but moves about 2px per second.
 | | |
 |---|---|
 | Mark gold | `#f3b71a` |
-| Action navy | `#1b4b99` |
+| Action navy | `#004494` — the site's own `--primary` / `--blue` token |
 | Hero gradient | `linear-gradient(#c6bd82 10%, #ddd7b5 40%, #ebe4d1 82%, #f5f1e6 100%)` |
-| Motif strokes | white at 42–55% |
+| Motif strokes | white at 42–55%; the mark's outline is the CTA navy at 55% |
 | Motif fills | white at 5.5%, gold at 5.5% |
 
 The "G" path is lifted from the bank's own header logo SVG
