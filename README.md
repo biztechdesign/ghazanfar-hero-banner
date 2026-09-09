@@ -18,8 +18,8 @@ no build step, no internet connection needed.
 
 | Folder | What it shows |
 |---|---|
-| `00-preview-all/` | **Start here.** All three side by side, plus the motion spec and porting notes. |
-| `option-a-lattice/` | The tessellation alone. Quietest — pure texture, nothing competing with the headline. |
+| `index.html` | **Start here.** All three side by side, plus the motion spec and porting notes. |
+| `option-a-lattice/` | The tessellation plus the app shot on the right. |
 | `option-b-lattice-mark/` | The lattice with the "G" from the header logo sitting in a clearing. **Recommended.** |
 | `option-c-lattice-rosette/` | The lattice with one star blown up, blooming petal by petal. |
 
@@ -71,21 +71,24 @@ and delete the `<style jsx global>` wrapper — nothing else changes.
 
 ## Motion
 
+The lattice is not revealed by a fade. Each star is split into two open halves
+that both start at its **left tip** and travel round to meet at its **right tip** —
+which is where the next shape picks the line up. One column hands off to the next,
+so a single line appears to grow through the whole net from left to right.
+
 | Step | Duration | Stagger | What moves |
 |---|---|---|---|
-| Tiles appear | 1.20s | wave, 2.6s total | Opacity per tile, ordered by `col + row` — a diagonal sweep from the top-left |
-| Outlines draw | 1.05s | same wave | `stroke-dashoffset` 1 → 0 on `pathLength="1"`, so every star takes the same time |
-| Crosses follow | 1.05s | wave, +120ms | The gap shapes trail their four surrounding stars |
-| Mark draws | 2.60s | once, +1.10s | Option B — one long compound path, so it gets a slower near-constant pen speed |
-| Rosette blooms | 1.50s | 90ms × 8 | Option C — each petal scales from 0.62 and unwinds −14° |
-| Ambient drift | 72s | loop | −164px diagonal — exactly one cell, so the loop never shows a seam |
+| Star opens | 0.38s | one column every 0.22s | Two half-outlines draw from the left tip and meet at the right |
+| Cross follows | 0.26s | +0.27s after its column's star | The gap shape, wound to start at its own left point |
+| Phones land | 0.95s | centre 2.50s, left 2.66s, right 2.80s | Centre rises; the outer two fan out from behind it |
+| Light sweep | 1.60s | once, 4.20s | A single sheen across the phones, clipped to their silhouettes |
+| Phone float | 7s | loop, alternate | ±9px, starts once they have landed |
+| Ambient drift | 72s | loop | −104px diagonal — exactly one cell, so the loop never shows a seam |
 | Pointer parallax | — | rAF, lerp .06 | ±22px counter to the cursor |
 
-The intro plays once. The drift never stops but moves about 2px per second.
-
-`stroke-dashoffset` is not GPU-composited — every drawing path repaints each frame.
-The wave is deliberately spread wider than each draw lasts, so peak load is **168**
-concurrent draws rather than all 281 at once.
+`stroke-dashoffset` is not GPU-composited, so every drawing path repaints each
+frame. Because a column only starts as the previous one finishes, peak load is
+about **50** concurrent draws out of 780 paths — that is what keeps it smooth.
 
 ## Accessibility and cost
 
@@ -94,7 +97,8 @@ concurrent draws rather than all 281 at once.
   frame renders immediately.
 - Tiles are generated to fill the measured hero and rebuilt on resize, so no
   oversized off-screen grid is ever drawn.
-- About 5 KB of markup. No library, no Lottie JSON, no image request.
+- No library, no Lottie JSON. Option A embeds the app mockup as a data URI so the
+  file stays standalone (~150 KB); the other two are ~30 KB.
 
 ## Brand values used
 
@@ -103,7 +107,7 @@ concurrent draws rather than all 281 at once.
 | Mark gold | `#f3b71a` |
 | Action navy | `#004494` — the site's own `--primary` / `--blue` token |
 | Hero gradient | `linear-gradient(#c6bd82 10%, #ddd7b5 40%, #ebe4d1 82%, #f5f1e6 100%)` |
-| Motif strokes | white at 42–55%; the mark's outline is the CTA navy at 55% |
+| Motif strokes | white at 26–34%; the mark's outline is the CTA navy at 55% |
 | Motif fills | white at 5.5%, gold at 5.5% |
 
 The "G" path is lifted from the bank's own header logo SVG
