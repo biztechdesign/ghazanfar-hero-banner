@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ghazanfar Bank — Hero background, Option C (lattice + rosette)</title>
+<!--
+  OPTION C — KHATAM LATTICE + BLOOMING ROSETTE
+  Standalone file. Open it directly in a browser, or send it to anyone; it needs
+  no server and no internet connection. Everything is inline SVG + CSS.
+  Change VARIANT below to preview the other two options in this same file.
+-->
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#0e131d}
+
+  /* ---------------------------------------------------------------
+     The hero. In the real site this is the existing
+     <section class="section-spacing relative h-screen w-full overflow-hidden">
+     --------------------------------------------------------------- */
+  .hero{position:relative;height:100vh;width:100%;overflow:hidden;isolation:isolate}
+
+  /* layer 0 — the khaki gradient already on ghazanfarbank.com */
+  .hero__grad{
+    position:absolute;inset:0;z-index:0;
+    background:linear-gradient(rgb(198,189,130) 10%, rgb(221,215,181) 40%, rgb(235,228,209) 82%, rgb(245,241,230) 100%);
+  }
+
+  /* layer 1 — the motif. Masked so it never reaches the headline column. */
+  .hero__motif{
+    position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.18) 30%,#000 66%);
+            mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.18) 30%,#000 66%);
+  }
+  .motif{position:absolute;inset:0;will-change:transform}
+  .motif svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  /* layer 2 — the copy */
+  .hero__content{position:absolute;inset:0;z-index:2;display:flex;align-items:center}
+  .wrap{margin:0 auto;width:100%;max-width:1280px;padding:0 clamp(24px,5vw,32px)}
+  h1{font-size:clamp(34px,4.6vw,60px);line-height:1.07;letter-spacing:-.025em;
+     margin:0 0 20px;color:#111;font-weight:700;max-width:13ch}
+  .sub{font-size:18px;line-height:1.5;color:#2c2c2c;margin:0 0 32px;max-width:34ch}
+  .btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 23px;border-radius:7px;
+       font-size:15px;font-weight:600;text-decoration:none;border:1px solid transparent}
+  .btn--p{background:#1b4b99;color:#fff}
+  .btn--s{background:#fff;color:#1b4b99;border-color:#fff}
+
+  /* ---------------- animation ---------------- */
+  .tile{opacity:0;animation:fadeIn 1.1s cubic-bezier(.16,.9,.3,1) forwards}
+  @keyframes fadeIn{to{opacity:1}}
+  .ink{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.5s cubic-bezier(.35,0,.2,1) forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  /* translates by exactly one grid cell, so the loop is seamless */
+  .drift{animation:drift 72s linear infinite}
+  @keyframes drift{to{transform:translate(-164px,-164px)}}
+  .bloom{transform-box:view-box;opacity:0;animation:bloom 1.5s cubic-bezier(.16,.9,.3,1) forwards}
+  @keyframes bloom{0%{opacity:0;transform:scale(.62) rotate(-14deg)}100%{opacity:1;transform:scale(1) rotate(0deg)}}
+  .breathe{transform-box:view-box;animation:breathe 16s ease-in-out infinite alternate}
+  @keyframes breathe{from{transform:scale(1)}to{transform:scale(1.03)}}
+
+  /* on phones the motif would sit behind the copy — move it below and soften it */
+  @media (max-width:768px){
+    .hero__motif{
+      -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.3) 42%,#000 78%);
+              mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.3) 42%,#000 78%);
+      opacity:.72;
+    }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .tile,.ink,.bloom{animation:none!important;opacity:1!important;transform:none!important;stroke-dashoffset:0!important}
+    .drift,.breathe{animation:none!important}
+  }
+
+  /* preview chrome only — delete when porting */
+  .replay{position:fixed;right:20px;bottom:20px;z-index:9;cursor:pointer;background:#fff;color:#111;
+    border:0;border-radius:99px;padding:11px 18px;font:600 11px/1 ui-monospace,monospace;
+    letter-spacing:.1em;text-transform:uppercase;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+  .replay:focus-visible{outline:2px solid #1b4b99;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero__grad"></div>
+  <div class="hero__motif"><div class="motif" id="motif"></div></div>
+  <div class="hero__content"><div class="wrap">
+    <h1>Shariah-Compliant Digital Banking at Your Fingertips</h1>
+    <p class="sub">Secure, transparent, and Shariah banking solutions &mdash; accessible from anywhere in Afghanistan.</p>
+    <div class="btns">
+      <a class="btn btn--p" href="#">Download App &rarr;</a>
+      <a class="btn btn--s" href="#">Online Banking &rarr;</a>
+    </div>
+  </div></div>
+</section>
+
+<button class="replay" id="replay">Replay animation</button>
+
+<script>
+/* =====================================================================
+   VARIANT: "lattice" | "mark" | "rosette"
+   ===================================================================== */
+var VARIANT = "rosette";
+
+/* The gold "G" from the bank's own header logo SVG. */
+var MARK = "M16.59,89.04c.31.06.46-.03.71-.19.92-.6,2.54-2.64,3.5-3.53,10.54-9.69,24.89-19.43,39.16-22.11,9.04-1.69,23.53-2.94,28.96,6.2,4.92,8.28,2.79,16.15-4.79,21.6-.32.23-2.83,1.63-2.67,1.84,8.64,3.4,10.58,11.49,8.38,19.94-3.86,14.79-26.16,35.85-42.18,26.65-4.3-2.47-6.95-6.44-9.08-10.81-6.31,7.69-16.18,16-26.86,12.2-3.84-1.36-7.04-4.32-9.02-7.85-5.96-10.61-1.19-26.07,6-35C.53,89.14.12,76.81,2.19,65.5,7.55,36.3,35.96,4.93,65.93.45c23.67-3.54,39.04,14.08,26.88,36.14-5.45,9.9-19.02,23.69-31.48,19.83-4.66-1.44-7.75-4.97-8.16-9.92-1.03-12.3,15.44-25.69,23.57-33.23.83-1,2.65.06,2.09,1.07-4.78,4.99-9.49,10.32-13.12,16.23-2.84,4.63-7.03,13.06-3.21,18.05,4.86,6.35,13.25-2.3,16.55-6.32,5.72-6.98,10.84-19.35,4.13-27.23-4.34-5.09-10.43-4.56-16.32-2.86-20.45,5.9-39.97,33.26-46.99,52.45-2.81,7.67-5.02,16.2-3.26,24.37ZM63.62,98.06c-.12-.19-.06-.78,0-1.03.27-1.06,5.56-4.75,6.79-5.87,4.69-4.29,12.13-13.61,7.02-19.89s-19.59-1.5-25.75.75c-9.06,3.3-17.55,8.27-24.95,14.42-1.03.86-7.4,6.45-7.51,7.17,5.97,7.15,16.61.81,22.53-3.39,5.08-3.6,9.27-8.16,14.45-11.66,5.48-3.7,11.89-6.86,18.4-8.18.96,2.15-1.92,2.64-3.38,3.52-8.42,5.1-10.62,11.96-14.44,20.32-4.91,10.73-9.92,21.51-16,31.61,8.13,16,22.7,2.84,29.58-6.57,3.6-4.92,8.41-13.1,6.16-19.35s-8.97.07-12.91-1.85ZM41.29,99.09c-.18-.19-4.03,2.33-4.54,2.59-7.17,3.55-17.21,4.77-23.92-.35-.24-.09-.38.03-.57.16-.52.36-2.34,3.14-2.78,3.85-4.41,7.14-6.63,17.77.39,24.09,7.33,6.61,13.7.27,18.13-5.76,5.46-7.43,9.87-16.03,13.29-24.58Z";
+
+var NS = "http://www.w3.org/2000/svg";
+var CELL = 164;           /* grid cell — the drift loop translates by exactly this */
+var UID = 0;
+
+function el(t, a){ var n = document.createElementNS(NS, t); a = a || {}; for (var k in a) n.setAttribute(k, a[k]); return n; }
+
+/* Round every corner of a polygon: cut r off each side, arc through the vertex. */
+function roundPoly(pts, r){
+  var d = "", n = pts.length;
+  for (var i = 0; i < n; i++){
+    var p = pts[(i - 1 + n) % n], v = pts[i], q = pts[(i + 1) % n];
+    var ax = v[0] - p[0], ay = v[1] - p[1], bx = q[0] - v[0], by = q[1] - v[1];
+    var la = Math.hypot(ax, ay), lb = Math.hypot(bx, by);
+    var ra = Math.min(r, la / 2), rb = Math.min(r, lb / 2);
+    var sx = v[0] - ax / la * ra, sy = v[1] - ay / la * ra;
+    var ex = v[0] + bx / lb * rb, ey = v[1] + by / lb * rb;
+    d += (i === 0 ? "M" : "L") + sx.toFixed(2) + "," + sy.toFixed(2);
+    d += "Q" + v[0].toFixed(2) + "," + v[1].toFixed(2) + " " + ex.toFixed(2) + "," + ey.toFixed(2);
+  }
+  return d + "Z";
+}
+
+/* Eight-point star — tips on the axes and the diagonals. */
+function star(cx, cy, R){
+  var pts = [], ri = R * 0.7654;
+  for (var k = 0; k < 8; k++){
+    var ao = (45 * k) * Math.PI / 180, ai = (45 * k + 22.5) * Math.PI / 180;
+    pts.push([cx + R * Math.cos(ao), cy + R * Math.sin(ao)]);
+    pts.push([cx + ri * Math.cos(ai), cy + ri * Math.sin(ai)]);
+  }
+  return roundPoly(pts, R * 0.075);
+}
+
+/* The cross filling each gap, its four points meeting the surrounding stars. */
+function cross(cx, cy, L, w){
+  var p = [[0,-L],[w,-w],[L,0],[w,w],[0,L],[-w,w],[-L,0],[-w,-w]]
+    .map(function(q){ return [cx + q[0], cy + q[1]]; });
+  return roundPoly(p, w * 0.5);
+}
+
+/* A soft radial hole in the lattice, so whatever sits on top gets quiet ground. */
+function clearing(svg, W, H, cx, cy, r){
+  var id = "gbClear" + (++UID);
+  var defs = el("defs");
+  var grad = el("radialGradient", {id: id + "g", cx: cx, cy: cy, r: r, gradientUnits: "userSpaceOnUse"});
+  grad.appendChild(el("stop", {offset: "0", "stop-color": "#000"}));
+  grad.appendChild(el("stop", {offset: ".52", "stop-color": "#000"}));
+  grad.appendChild(el("stop", {offset: "1", "stop-color": "#fff"}));
+  defs.appendChild(grad);
+  var mask = el("mask", {id: id, maskUnits: "userSpaceOnUse", x: 0, y: 0, width: W, height: H});
+  mask.appendChild(el("rect", {x: 0, y: 0, width: W, height: H, fill: "#fff"}));
+  mask.appendChild(el("circle", {cx: cx, cy: cy, r: r, fill: "url(#" + id + "g)"}));
+  defs.appendChild(mask);
+  svg.appendChild(defs);
+  return id;
+}
+
+function buildLattice(svg, W, H, maskId){
+  var S = CELL, R = S * 0.5;
+  var g = el("g", {"class": "drift"});
+  var cols = Math.ceil(W / S) + 3, rows = Math.ceil(H / S) + 3;
+  var maxd = cols + rows;
+
+  for (var r = -1; r < rows; r++){
+    for (var c = -1; c < cols; c++){
+      var x = c * S, y = r * S;
+      var t0 = 0.05 + ((c + r + 2) / maxd) * 1.45;   /* diagonal wave */
+
+      var tile = el("g", {"class": "tile"});
+      tile.style.animationDelay = t0 + "s";
+
+      var st = el("path", {d: star(x, y, R), fill: "rgba(255,255,255,.055)",
+        stroke: "rgba(255,255,255,.55)", "stroke-width": 1.5, "stroke-linejoin": "round",
+        pathLength: 1, "class": "ink"});
+      st.style.animationDelay = t0 + "s";
+      tile.appendChild(st);
+
+      var cr = el("path", {d: cross(x + S / 2, y + S / 2, S * 0.23, S * 0.07),
+        fill: "rgba(243,183,26,.055)", stroke: "rgba(255,255,255,.42)", "stroke-width": 1.4,
+        "stroke-linejoin": "round", pathLength: 1, "class": "ink"});
+      cr.style.animationDelay = (t0 + 0.1) + "s";
+      tile.appendChild(cr);
+
+      g.appendChild(tile);
+    }
+  }
+  if (maskId){ var h = el("g", {mask: "url(#" + maskId + ")"}); h.appendChild(g); svg.appendChild(h); }
+  else svg.appendChild(g);
+}
+
+/* The "G", sized to leave clear air above and below it. */
+function addMark(svg, H, cx, cy){
+  var g = el("g", {transform: "translate(" + cx + " " + cy + ") scale(" + (H / 235) + ") translate(-48 -71)"});
+  g.appendChild(el("path", {d: MARK, fill: "rgba(255,255,255,.40)"}));
+  var ink = el("path", {d: MARK, fill: "none", stroke: "rgba(255,255,255,.55)",
+    "stroke-width": .8, pathLength: 1, "class": "ink"});
+  ink.style.animationDelay = "1.1s";
+  g.appendChild(ink);
+  svg.appendChild(g);
+}
+
+/* One lattice star blown up, blooming petal by petal. */
+function addRosette(svg, H, cx, cy){
+  var R = H * 0.46;
+  var petal = "M0,0 C -0.19,-0.26 -0.20,-0.63 0,-1 C 0.20,-0.63 0.19,-0.26 0,0 Z";
+  var host = el("g", {"class": "breathe"});
+  host.style.transformOrigin = cx + "px " + cy + "px";
+
+  for (var i = 0; i < 8; i++){
+    var arm = el("g", {transform: "rotate(" + (i * 45) + " " + cx + " " + cy + ")"});
+    var anim = el("g", {"class": "bloom"});
+    anim.style.transformOrigin = cx + "px " + cy + "px";
+    anim.style.animationDelay = (0.9 + i * 0.09) + "s";
+    var scaled = el("g", {transform: "translate(" + cx + " " + cy + ") scale(" + R + ")"});
+    scaled.appendChild(el("path", {d: petal,
+      fill: (i % 2) ? "rgba(255,255,255,.27)" : "rgba(255,255,255,.17)"}));
+    anim.appendChild(scaled); arm.appendChild(anim); host.appendChild(arm);
+  }
+  var core = el("circle", {cx: cx, cy: cy, r: H * 0.09, fill: "rgba(243,183,26,.14)", "class": "bloom"});
+  core.style.transformOrigin = cx + "px " + cy + "px";
+  core.style.animationDelay = "1.7s";
+  host.appendChild(core);
+  svg.appendChild(host);
+}
+
+var host = document.getElementById("motif");
+
+function build(){
+  var W = host.clientWidth, H = host.clientHeight;
+  if (!W || !H) return;
+  host.replaceChildren();
+
+  var svg = el("svg", {viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", "aria-hidden": "true"});
+  var cx = W * 0.72, cy = H * 0.5, maskId = null;
+
+  if (VARIANT === "mark")    maskId = clearing(svg, W, H, cx, cy, H * 0.62);
+  if (VARIANT === "rosette") maskId = clearing(svg, W, H, cx, cy, H * 0.60);
+
+  buildLattice(svg, W, H, maskId);
+  if (VARIANT === "mark")    addMark(svg, H, cx, cy);
+  if (VARIANT === "rosette") addRosette(svg, H, cx, cy);
+
+  host.appendChild(svg);
+}
+
+build();
+
+/* rebuild on resize so we only ever draw the tiles that are on screen */
+var rt;
+addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(build, 200); });
+
+/* pointer parallax — skipped on touch and under reduced-motion */
+if (!matchMedia("(prefers-reduced-motion:reduce)").matches && matchMedia("(hover:hover)").matches){
+  var mx = 0, my = 0, tx = 0, ty = 0;
+  addEventListener("pointermove", function(e){
+    mx = e.clientX / innerWidth - .5;
+    my = e.clientY / innerHeight - .5;
+  }, {passive: true});
+  (function loop(){
+    tx += (mx - tx) * .06; ty += (my - ty) * .06;
+    host.style.transform = "translate3d(" + (-tx * 22).toFixed(2) + "px," + (-ty * 22).toFixed(2) + "px,0)";
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* preview chrome only — delete when porting */
+document.getElementById("replay").addEventListener("click", build);
+</script>
+</body>
+</html>
