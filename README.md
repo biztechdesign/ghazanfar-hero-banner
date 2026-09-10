@@ -1,6 +1,6 @@
 # Ghazanfar Bank — animated hero background
 
-Three options for the empty right-hand side of the hero on
+Four options for the empty right-hand side of the hero on
 [ghazanfarbank.indiaondesk.com](https://ghazanfarbank.indiaondesk.com/).
 
 Technique borrowed from [aib.af](https://aib.af/): an oversized tone-on-tone motif
@@ -22,9 +22,38 @@ no build step, no internet connection needed.
 | `option-a-lattice/` | The tessellation plus the app shot on the right. |
 | `option-b-lattice-mark/` | The lattice with the "G" from the header logo sitting in a clearing. **Recommended.** |
 | `option-c-lattice-rosette/` | The lattice with one star blown up, blooming petal by petal. |
+| `option-d-light/` | Option A on a **white / off-white** ground, with the lattice ink switchable between **blue, gold and green**. App shot 25% larger. |
 
 Each single-option file has a **Replay animation** button, bottom right, so you can
-watch the intro again without reloading.
+watch the intro again without reloading. Option D adds two more controls, bottom
+left: three colour pills for the pattern colour, and a **Pattern size** slider.
+
+### Option D — picking the pattern colour
+
+The three inks live in CSS variables at the top of the `<style>` block. Lock one in
+by setting the attribute on `<html>` and deleting the pills:
+
+```html
+<html lang="en" data-pattern="blue">   <!-- "blue" | "gold" | "green" -->
+```
+
+The ground is pure white for its first 70%; the theme colour only shows up as a
+tint across the last 30%. The lattice itself sits at roughly half the ink weight of
+the other options, and a soft white clearing (`.hero__scrim`) sits between the
+pattern and the copy — the tessellation is background texture there, never
+something the headline competes with.
+
+### Option D — picking the pattern size
+
+The **Pattern size** slider sweeps the grid cell from 56px (a dense net) to 200px
+(a few large stars), 104px by default. Everything scales off it: star radius, the
+crosses, and the drift loop, which always travels exactly one cell so the loop
+stays seamless. Once you have settled on a number, set it in the script and drop
+the slider:
+
+```js
+var CELL = 104;   // grid cell in px
+```
 
 To flip one file between options, change line 105:
 

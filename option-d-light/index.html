@@ -1,20 +1,61 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-pattern="blue">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M30.20%2C15.20Q31.00%2C16.00%2030.20%2C16.80L27.40%2C19.60Q26.61%2C20.39%2026.61%2C21.52L26.61%2C25.48Q26.61%2C26.61%2025.48%2C26.61L21.52%2C26.61Q20.39%2C26.61%2019.60%2C27.40L16.80%2C30.20Q16.00%2C31.00%2015.20%2C30.20L12.40%2C27.40Q11.61%2C26.61%2010.48%2C26.61L6.52%2C26.61Q5.39%2C26.61%205.39%2C25.48L5.39%2C21.52Q5.39%2C20.39%204.60%2C19.60L1.80%2C16.80Q1.00%2C16.00%201.80%2C15.20L4.60%2C12.40Q5.39%2C11.61%205.39%2C10.48L5.39%2C6.52Q5.39%2C5.39%206.52%2C5.39L10.48%2C5.39Q11.61%2C5.39%2012.40%2C4.60L15.20%2C1.80Q16.00%2C1.00%2016.80%2C1.80L19.60%2C4.60Q20.39%2C5.39%2021.52%2C5.39L25.48%2C5.39Q26.61%2C5.39%2026.61%2C6.52L26.61%2C10.48Q26.61%2C11.61%2027.40%2C12.40Z%22%20fill%3D%22%23f3b71a%22%2F%3E%3C%2Fsvg%3E">
-<title>Ghazanfar Bank — Hero background, Option A (lattice only)</title>
+<title>Ghazanfar Bank — Hero background, Option D (light ground)</title>
 <!--
-  OPTION A — KHATAM LATTICE ONLY
-  Standalone file. Open it directly in a browser, or send it to anyone; it needs
-  no server and no internet connection. Everything is inline SVG + CSS.
-  Change VARIANT below to preview the other two options in this same file.
+  OPTION D — KHATAM LATTICE ON A LIGHT GROUND
+  The same lattice as Option A, but the hero sits on white / off-white instead of
+  the khaki gradient, and the lattice ink is one themed colour: navy blue, gold or
+  green. Switch with the pills bottom-left, or set data-pattern="blue|gold|green"
+  on <html> to lock one in. The app shot is 25% larger than in Option A.
+  Standalone file — inline SVG + CSS, no server and no internet needed.
 -->
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#0e131d}
+  body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#f7f5ef}
+
+  /* ---------------------------------------------------------------
+     PATTERN COLOUR — three inks over the same ground. The ground is
+     pure white for its first 70%; the theme colour only appears as a
+     tint in the last 30%. Set data-pattern on <html> to pick one.
+     --------------------------------------------------------------- */
+  :root,
+  :root[data-pattern="blue"]{
+    --ground:linear-gradient(#ffffff 0%, #ffffff 70%, #eef3fa 100%);
+    --line-star:rgba(0,68,148,.15);
+    --line-cross:rgba(0,68,148,.10);
+    --node:rgba(0,68,148,.025);
+    --mark-fill:rgba(0,68,148,.07);
+    --mark-ink:rgba(0,68,148,.22);
+    --accent:#004494;
+    --shadow:rgba(18,34,62,.20);
+  }
+  :root[data-pattern="gold"]{
+    --ground:linear-gradient(#ffffff 0%, #ffffff 70%, #faf4e7 100%);
+    --line-star:rgba(166,120,14,.20);
+    --line-cross:rgba(166,120,14,.13);
+    --node:rgba(243,183,26,.06);
+    --mark-fill:rgba(166,120,14,.08);
+    --mark-ink:rgba(140,100,10,.24);
+    --accent:#004494;
+    --shadow:rgba(74,56,16,.20);
+  }
+  :root[data-pattern="green"]{
+    --ground:linear-gradient(#ffffff 0%, #ffffff 70%, #edf6f2 100%);
+    --line-star:rgba(15,107,79,.16);
+    --line-cross:rgba(15,107,79,.11);
+    --node:rgba(15,107,79,.03);
+    --mark-fill:rgba(15,107,79,.07);
+    --mark-ink:rgba(15,107,79,.23);
+    /* the CTA stays brand navy in every theme; swap to #0f6b4f if you want the
+       button to follow the pattern colour too */
+    --accent:#004494;
+    --shadow:rgba(16,54,42,.20);
+  }
 
   /* ---------------------------------------------------------------
      The hero. In the real site this is the existing
@@ -22,10 +63,10 @@
      --------------------------------------------------------------- */
   .hero{position:relative;height:100vh;width:100%;overflow:hidden;isolation:isolate}
 
-  /* layer 0 — the khaki gradient already on ghazanfarbank.com */
+  /* layer 0 — white / off-white ground, tinted a touch toward the pattern colour */
   .hero__grad{
     position:absolute;inset:0;z-index:0;
-    background:linear-gradient(rgb(198,189,130) 10%, rgb(221,215,181) 40%, rgb(235,228,209) 82%, rgb(245,241,230) 100%);
+    background:var(--ground);
   }
 
   /* layer 1 — the motif, spanning the whole hero section. */
@@ -35,17 +76,30 @@
   .motif{position:absolute;inset:0;will-change:transform}
   .motif svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 
+  /* layer 1b — a soft white clearing under the copy. The lattice is background,
+     so it steps aside where the headline sits instead of fighting it. */
+  .hero__scrim{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(58% 62% at 22% 50%,
+      rgba(255,255,255,.94) 0%,
+      rgba(255,255,255,.80) 42%,
+      rgba(255,255,255,.38) 66%,
+      rgba(255,255,255,0)   84%);
+  }
+
   /* layer 2 — the copy */
   .hero__content{position:absolute;inset:0;z-index:2;display:flex;align-items:center}
   .wrap{margin:0 auto;width:100%;max-width:1280px;padding:0 clamp(24px,5vw,32px)}
   h1{font-size:clamp(34px,4.6vw,60px);line-height:1.07;letter-spacing:-.025em;
-     margin:0 0 20px;color:#111;font-weight:700;max-width:13ch}
-  .sub{font-size:18px;line-height:1.5;color:#2c2c2c;margin:0 0 32px;max-width:34ch}
+     margin:0 0 20px;color:#0e1726;font-weight:700;max-width:13ch}
+  .sub{font-size:18px;line-height:1.5;color:#42505f;margin:0 0 32px;max-width:34ch}
   .btns{display:flex;gap:12px;flex-wrap:wrap}
   .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 23px;border-radius:7px;
        font-size:15px;font-weight:600;text-decoration:none;border:1px solid transparent}
-  .btn--p{background:#004494;color:#fff}
-  .btn--s{background:#fff;color:#004494;border-color:#fff}
+  .btn--p{background:var(--accent);color:#fff}
+  /* a white button on a white ground needs an edge to exist */
+  .btn--s{background:#fff;color:var(--accent);border-color:rgba(14,23,38,.14);
+       box-shadow:0 1px 2px rgba(14,23,38,.05)}
 
   /* ---------------- animation ---------------- */
 /* One line grows through the whole net. Each star opens at its left tip and its
@@ -53,8 +107,9 @@
    shape picks the line up, so the growth chains shape to shape, left to right.
    Nothing fades: the stroke is the reveal. */
 .ln{stroke-dasharray:1;stroke-dashoffset:1;will-change:stroke-dashoffset}
-.ln-star{animation:draw .62s cubic-bezier(.3,.65,.4,1) forwards}
-.ln-cross{fill-opacity:0;animation:draw .42s cubic-bezier(.3,.65,.4,1) forwards,
+.ln-star{stroke:var(--line-star);animation:draw .62s cubic-bezier(.3,.65,.4,1) forwards}
+.ln-cross{stroke:var(--line-cross);fill:var(--node);fill-opacity:0;
+  animation:draw .42s cubic-bezier(.3,.65,.4,1) forwards,
   fillIn .42s linear forwards}
   @keyframes draw{to{stroke-dashoffset:0}}
   @keyframes fillIn{to{fill-opacity:1}}
@@ -63,12 +118,14 @@
      teleports between them, which is what read as stuttery. Each subpath is drawn
      on its own instead, in sequence, at one constant speed (linear = no crawling
      tail, which is what actually makes a draw look smooth). */
-  .mark-ink{will-change:stroke-dashoffset}
+  .mark-ink{stroke:var(--mark-ink);will-change:stroke-dashoffset}
   @keyframes drawLen{to{stroke-dashoffset:0}}
-  .mark-fill{opacity:0;animation:fadeIn 1.4s cubic-bezier(.22,.61,.36,1) 1.5s forwards}
-  /* translates by exactly one grid cell, so the loop is seamless */
+  .mark-fill{fill:var(--mark-fill);opacity:0;animation:fadeIn 1.4s cubic-bezier(.22,.61,.36,1) 1.5s forwards}
+  /* translates by exactly one grid cell, so the loop is seamless whatever
+     size the lattice is set to. JS keeps --cell in sync with CELL. */
   .drift{animation:drift 120s linear infinite}
-  @keyframes drift{to{transform:translate(-104px,-104px)}}
+  @keyframes drift{to{transform:translate(
+    calc(-1 * var(--cell,104px)), calc(-1 * var(--cell,104px)))}}
   .bloom{transform-box:view-box;opacity:0;animation:bloom 1.5s cubic-bezier(.16,.9,.3,1) forwards}
   @keyframes bloom{0%{opacity:0;transform:scale(.62) rotate(-14deg)}100%{opacity:1;transform:scale(1) rotate(0deg)}}
   .breathe{transform-box:view-box;animation:breathe 16s ease-in-out infinite alternate}
@@ -77,6 +134,8 @@
   /* on phones the motif would sit behind the copy — move it below and soften it */
   @media (max-width:768px){
     .hero__motif{opacity:.7}
+    .hero__scrim{background:radial-gradient(96% 60% at 42% 46%,
+      rgba(255,255,255,.94) 0%, rgba(255,255,255,.78) 50%, rgba(255,255,255,0) 88%)}
   }
   @media (prefers-reduced-motion:reduce){
     .ln,.bloom,.mark-ink,.mark-fill{animation:none!important;opacity:1!important;
@@ -104,7 +163,7 @@
   .phone{
     position:absolute;top:0;height:301px;opacity:0;
     background-image:var(--shot);background-repeat:no-repeat;background-size:383px 301px;
-    filter:drop-shadow(0 18px 26px rgba(32,30,18,.30));
+    filter:drop-shadow(0 18px 30px var(--shadow));
   }
   .p1{left:0;width:119px;background-position:0 0;z-index:1;transform-origin:100% 85%;
       animation:fanL .95s cubic-bezier(.16,.9,.3,1) 1.66s forwards}
@@ -141,7 +200,20 @@
   .replay{position:fixed;right:20px;bottom:20px;z-index:9;cursor:pointer;background:#fff;color:#111;
     border:0;border-radius:99px;padding:11px 18px;font:600 11px/1 ui-monospace,monospace;
     letter-spacing:.1em;text-transform:uppercase;box-shadow:0 6px 20px rgba(0,0,0,.2)}
-  .replay:focus-visible{outline:2px solid #004494;outline-offset:2px}
+  .replay:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .swatches{position:fixed;left:20px;bottom:20px;z-index:9;display:flex;gap:8px;
+    background:#fff;border-radius:99px;padding:6px;box-shadow:0 6px 20px rgba(14,23,38,.14)}
+  .sw{width:28px;height:28px;border-radius:99px;border:2px solid transparent;cursor:pointer;padding:0}
+  .sw[aria-pressed="true"]{border-color:#0e1726}
+  .sw:focus-visible{outline:2px solid #0e1726;outline-offset:2px}
+  .sw--blue{background:#004494}
+  .sw--gold{background:#e0a516}
+  .sw--green{background:#0f6b4f}
+  .sizer{position:fixed;left:20px;bottom:62px;z-index:9;display:flex;align-items:center;gap:10px;
+    background:#fff;border-radius:99px;padding:8px 16px;box-shadow:0 6px 20px rgba(14,23,38,.14);
+    font:600 10px/1 ui-monospace,monospace;letter-spacing:.09em;text-transform:uppercase;color:#5a6675}
+  .sizer input{width:132px;accent-color:var(--accent);cursor:pointer}
+  .sizer output{color:#0e1726;min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -149,6 +221,7 @@
 <section class="hero">
   <div class="hero__grad"></div>
   <div class="hero__motif"><div class="motif" id="motif"></div></div>
+  <div class="hero__scrim"></div>
   <div class="shot-layer"><div class="shot-wrap">
   <div class="shot">
     <div class="shot__inner">
@@ -169,6 +242,16 @@
   </div></div>
 </section>
 
+<div class="sizer">
+  <label for="cell">Pattern size</label>
+  <input id="cell" type="range" min="56" max="200" step="4" value="104">
+  <output id="cellOut">104px</output>
+</div>
+<div class="swatches" role="group" aria-label="Pattern colour">
+  <button class="sw sw--blue"  data-c="blue"  aria-label="Blue pattern"  aria-pressed="true"></button>
+  <button class="sw sw--gold"  data-c="gold"  aria-label="Gold pattern"  aria-pressed="false"></button>
+  <button class="sw sw--green" data-c="green" aria-label="Green pattern" aria-pressed="false"></button>
+</div>
 <button class="replay" id="replay">Replay animation</button>
 
 <script>
@@ -181,7 +264,8 @@ var VARIANT = "lattice";
 var MARK = "M16.59,89.04c.31.06.46-.03.71-.19.92-.6,2.54-2.64,3.5-3.53,10.54-9.69,24.89-19.43,39.16-22.11,9.04-1.69,23.53-2.94,28.96,6.2,4.92,8.28,2.79,16.15-4.79,21.6-.32.23-2.83,1.63-2.67,1.84,8.64,3.4,10.58,11.49,8.38,19.94-3.86,14.79-26.16,35.85-42.18,26.65-4.3-2.47-6.95-6.44-9.08-10.81-6.31,7.69-16.18,16-26.86,12.2-3.84-1.36-7.04-4.32-9.02-7.85-5.96-10.61-1.19-26.07,6-35C.53,89.14.12,76.81,2.19,65.5,7.55,36.3,35.96,4.93,65.93.45c23.67-3.54,39.04,14.08,26.88,36.14-5.45,9.9-19.02,23.69-31.48,19.83-4.66-1.44-7.75-4.97-8.16-9.92-1.03-12.3,15.44-25.69,23.57-33.23.83-1,2.65.06,2.09,1.07-4.78,4.99-9.49,10.32-13.12,16.23-2.84,4.63-7.03,13.06-3.21,18.05,4.86,6.35,13.25-2.3,16.55-6.32,5.72-6.98,10.84-19.35,4.13-27.23-4.34-5.09-10.43-4.56-16.32-2.86-20.45,5.9-39.97,33.26-46.99,52.45-2.81,7.67-5.02,16.2-3.26,24.37ZM63.62,98.06c-.12-.19-.06-.78,0-1.03.27-1.06,5.56-4.75,6.79-5.87,4.69-4.29,12.13-13.61,7.02-19.89s-19.59-1.5-25.75.75c-9.06,3.3-17.55,8.27-24.95,14.42-1.03.86-7.4,6.45-7.51,7.17,5.97,7.15,16.61.81,22.53-3.39,5.08-3.6,9.27-8.16,14.45-11.66,5.48-3.7,11.89-6.86,18.4-8.18.96,2.15-1.92,2.64-3.38,3.52-8.42,5.1-10.62,11.96-14.44,20.32-4.91,10.73-9.92,21.51-16,31.61,8.13,16,22.7,2.84,29.58-6.57,3.6-4.92,8.41-13.1,6.16-19.35s-8.97.07-12.91-1.85ZM41.29,99.09c-.18-.19-4.03,2.33-4.54,2.59-7.17,3.55-17.21,4.77-23.92-.35-.24-.09-.38.03-.57.16-.52.36-2.34,3.14-2.78,3.85-4.41,7.14-6.63,17.77.39,24.09,7.33,6.61,13.7.27,18.13-5.76,5.46-7.43,9.87-16.03,13.29-24.58Z";
 
 var NS = "http://www.w3.org/2000/svg";
-var CELL = 104;           /* grid cell — the drift loop translates by exactly this */
+var CELL = 104;           /* grid cell — the drift loop translates by exactly this.
+                             Bigger = fewer, larger stars; smaller = a denser net. */
 var UID = 0;
 
 function el(t, a){ var n = document.createElementNS(NS, t); a = a || {}; for (var k in a) n.setAttribute(k, a[k]); return n; }
@@ -376,6 +460,9 @@ function build(){
   if (!W || !H) return;
   host.replaceChildren();
 
+  /* keep the drift keyframe's travel equal to one cell, so the loop stays seamless */
+  document.documentElement.style.setProperty("--cell", CELL + "px");
+
   var svg = el("svg", {viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", "aria-hidden": "true"});
   var cx = W * 0.72, cy = H * 0.5, maskId = null;
 
@@ -410,6 +497,28 @@ if (!matchMedia("(prefers-reduced-motion:reduce)").matches && matchMedia("(hover
 
 /* preview chrome only — delete when porting */
 document.getElementById("replay").addEventListener("click", build);
+
+/* preview chrome only — the pattern-size slider. Once you have settled on a
+   size, set CELL to that number above and drop this block along with .sizer. */
+var cellIn = document.getElementById("cell"), cellOut = document.getElementById("cellOut");
+var sizeT;
+cellIn.addEventListener("input", function(){
+  CELL = +cellIn.value;
+  cellOut.value = CELL + "px";
+  clearTimeout(sizeT);
+  sizeT = setTimeout(build, 90);        /* debounced — a rebuild is ~500 paths */
+});
+
+/* preview chrome only — the pattern-colour pills. In production just set
+   data-pattern="blue" | "gold" | "green" on <html> and drop this block. */
+var swatches = document.querySelectorAll(".sw");
+swatches.forEach(function(b){
+  b.addEventListener("click", function(){
+    document.documentElement.setAttribute("data-pattern", b.dataset.c);
+    swatches.forEach(function(o){ o.setAttribute("aria-pressed", String(o === b)); });
+    build();                       /* replay the draw in the new colour */
+  });
+});
 </script>
 </body>
 </html>
