@@ -117,3 +117,33 @@ faster 4.6s sweep — say the word and I will match them.
 
 The "G" path is lifted from the bank's own header logo SVG
 (`GeneralSettings_HeaderLogo_1ff67a81-...svg`) — no new brand assets were drawn.
+
+## SVG assets — `assets/`
+
+Open `assets/index.html` to see them all rendered, including a seam test on the tile.
+
+| File | What it is |
+|---|---|
+| `hero-background-full.svg` | **The whole hero background in one file** — khaki gradient + full lattice. `background: url(...) center / cover no-repeat;` |
+| `hero-pattern-only.svg` | The same lattice with a transparent background, for layering over your own gradient or photography |
+| `pattern-khatam-tile.svg` | One seamless 104×104 tile, for `background-repeat: repeat` |
+| `pattern-khatam-currentcolor.svg` | The tile with `stroke="currentColor"` — inline only |
+| `ghazanfar-mark.svg` | The "G" alone, gold `#f3b71a`, viewBox cropped tight (97 × 142) |
+| `ghazanfar-mark-outline.svg` | The "G" as a navy `#004494` outline — the hero treatment |
+| `ghazanfar-mark-currentcolor.svg` | The "G" inheriting `currentColor` — inline only |
+| `ghazanfar-logo-full.svg` | Full lockup: mark + Arabic + wordmark |
+| `ghazanfar-logo-full-reversed.svg` | Same, wordmark in white for navy or photography |
+
+The pattern files are generated from the same maths as the animated hero, so the
+static and animated versions line up exactly.
+
+### Two things to know
+
+**`currentColor` only works inline.** Through `<img>` or `url()` the browser renders
+an SVG in its own isolated document, where there is no parent colour to inherit. Use
+the fixed-colour files in those places.
+
+**The logo files keep the logo's own navy, `#1b4b99`** — that is what the official
+header logo SVG declares. The site's UI navy is `#004494` (`--primary` / `--blue`),
+which is what the buttons and `ghazanfar-mark-outline.svg` use. The two are close but
+not the same; I have not "corrected" the logo, since that is a brand decision.
